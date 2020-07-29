@@ -25,6 +25,11 @@ variable "api_template" {
   description = "API Gateway OpenAPI 3 template file"
 }
 
+variable "binary_media_types" {
+  description = "Binary Media Types"
+  type = list
+}
+
 # variable "api_template_vars" {
 #   description = "Variables required in the OpenAPI template file"
 #   type        = map

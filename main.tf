@@ -13,6 +13,7 @@ data "template_file" "_" {
 resource "aws_api_gateway_rest_api" "_" {
   name           = var.api_name
   api_key_source = "HEADER"
+  binary_media_types = var.binary_media_types
 
   body = data.template_file._.rendered
 }
