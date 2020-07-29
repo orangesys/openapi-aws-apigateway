@@ -11,34 +11,37 @@ data "template_file" "_" {
 }
 
 resource "aws_api_gateway_rest_api" "_" {
-  name           = var.api_name
-  api_key_source = "HEADER"
+  name               = var.api_name
+  api_key_source     = "HEADER"
   binary_media_types = var.binary_media_types
 
   body = data.template_file._.rendered
 }
 
-# resource "aws_api_gateway_deployment" "_" {
-#   rest_api_id = aws_api_gateway_rest_api._.id
-#   stage_name  = ""
+resource "aws_api_gateway_deployment" "_" {
+  rest_api_id = aws_api_gateway_rest_api._.id
+  # stage_name  = ""
 
-#   lifecycle {
-#     create_before_destroy = true
-#   }
-# }
+  lifecycle {
+    create_before_destroy = true
+  }
+}
 
-# resource "aws_api_gateway_stage" "_" {
-#   stage_name    = var.namespace
-#   rest_api_id   = aws_api_gateway_rest_api._.id
-#   deployment_id = aws_api_gateway_deployment._.id
+resource "aws_api_gateway_stage" "_" {
+  for_each      = var.namespace
+  stage_name    = each.key
+  variables     = {url = each.value}
+    
+  rest_api_id   = aws_api_gateway_rest_api._.id
+  deployment_id = aws_api_gateway_deployment._.id
 
-#   xray_tracing_enabled = var.xray_tracing_enabled
+  # xray_tracing_enabled = var.xray_tracing_enabled
 
-#   tags = {
-#     Environment = var.namespace
-#     Name        = var.resource_tag_name
-#   }
-# }
+  # tags = {
+  #   Environment = var.namespace
+  #   Name        = var.resource_tag_name
+  # }
+}
 
 # resource "aws_api_gateway_method_settings" "_" {
 #   rest_api_id = aws_api_gateway_rest_api._.id

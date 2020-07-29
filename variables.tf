@@ -2,9 +2,10 @@
 # Variables: General
 # -----------------------------------------------------------------------------
 
-# variable "namespace" {
-#   description = "AWS resource namespace/prefix"
-# }
+variable "namespace" {
+  description = "AWS resource namespace/prefix"
+  type        = map
+}
 
 # variable "region" {
 #   description = "AWS region"
@@ -27,7 +28,7 @@ variable "api_template" {
 
 variable "binary_media_types" {
   description = "Binary Media Types"
-  type = list
+  type        = list
 }
 
 # variable "api_template_vars" {
