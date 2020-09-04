@@ -67,3 +67,9 @@ variable "binary_media_types" {
 #   type        = bool
 #   default     = false
 # }
+
+variable "api_description" {
+  description = "The description of the REST API"
+  type        = string
+  default     = ""
+}
