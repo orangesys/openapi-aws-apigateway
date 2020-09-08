@@ -23,6 +23,10 @@ resource "aws_api_gateway_deployment" "_" {
   rest_api_id = aws_api_gateway_rest_api._.id
   # stage_name  = ""
 
+  triggers = {
+    redeployment = sha1(data.template_file._.rendered)
+  }
+
   lifecycle {
     create_before_destroy = true
   }
