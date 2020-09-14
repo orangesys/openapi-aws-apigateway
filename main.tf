@@ -14,9 +14,13 @@ resource "aws_api_gateway_rest_api" "_" {
   name               = var.api_name
   api_key_source     = "HEADER"
   binary_media_types = var.binary_media_types
-  description = var.api_description
+  description        = var.api_description
 
   body = data.template_file._.rendered
+
+  endpoint_configuration {
+    types = ["REGIONAL"]
+  }
 }
 
 resource "aws_api_gateway_deployment" "_" {
@@ -33,10 +37,10 @@ resource "aws_api_gateway_deployment" "_" {
 }
 
 resource "aws_api_gateway_stage" "_" {
-  for_each      = var.namespace
-  stage_name    = each.key
-  variables     = {url = each.value}
-    
+  for_each   = var.namespace
+  stage_name = each.key
+  variables  = { url = each.value }
+
   rest_api_id   = aws_api_gateway_rest_api._.id
   deployment_id = aws_api_gateway_deployment._.id
 
