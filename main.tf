@@ -7,7 +7,7 @@
 data "template_file" "_" {
   template = var.api_template
 
-  # vars = var.api_template_vars
+  vars = var.api_template_vars
 }
 
 resource "aws_api_gateway_rest_api" "_" {
@@ -50,6 +50,30 @@ resource "aws_api_gateway_stage" "_" {
   #   Environment = var.namespace
   #   Name        = var.resource_tag_name
   # }
+}
+
+resource "aws_apigatewayv2_domain_name" "this" {
+  count       = var.domain_name != "" ? 1 : 0
+  domain_name = var.domain_name
+
+  domain_name_configuration {
+    certificate_arn = var.domain_name_certificate_arn
+    endpoint_type   = "REGIONAL"
+    security_policy = "TLS_1_2"
+  }
+}
+
+resource "aws_route53_record" "this" {
+  count   = var.domain_name != "" ? 1 : 0
+  name    = aws_apigatewayv2_domain_name.this[0].domain_name
+  type    = "A"
+  zone_id = var.zone_id
+
+  alias {
+    name                   = aws_apigatewayv2_domain_name.this[0].domain_name_configuration[0].target_domain_name
+    zone_id                = aws_apigatewayv2_domain_name.this[0].domain_name_configuration[0].hosted_zone_id
+    evaluate_target_health = false
+  }
 }
 
 # resource "aws_api_gateway_method_settings" "_" {
