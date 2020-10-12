@@ -87,3 +87,9 @@ variable "domain_name_certificate_arn" {
   default     = ""
 }
 
+variable "zone_id" {
+  description = "zone id"
+  type        = string
+  default     = ""
+}
+
