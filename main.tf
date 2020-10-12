@@ -53,6 +53,7 @@ resource "aws_api_gateway_stage" "_" {
 }
 
 resource "aws_apigatewayv2_domain_name" "this" {
+  count = var.domain_name != "" ? 1 : 0
   domain_name = var.domain_name
 
   domain_name_configuration {
