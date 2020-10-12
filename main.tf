@@ -64,6 +64,7 @@ resource "aws_apigatewayv2_domain_name" "this" {
 }
 
 resource "aws_route53_record" "this" {
+  count   = var.domain_name != "" ? 1 : 0
   name    = aws_apigatewayv2_domain_name.this[0].domain_name
   type    = "A"
   zone_id = var.zone_id
