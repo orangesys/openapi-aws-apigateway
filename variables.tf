@@ -31,10 +31,11 @@ variable "binary_media_types" {
   type        = list
 }
 
-# variable "api_template_vars" {
-#   description = "Variables required in the OpenAPI template file"
-#   type        = map
-# }
+variable "api_template_vars" {
+  description = "Variables required in the OpenAPI template file"
+  type        = map
+  default     = {}
+}
 
 # variable "api_throttling_rate_limit" {
 #   description = "API Gateway total requests across all API's within a REST endpoint"

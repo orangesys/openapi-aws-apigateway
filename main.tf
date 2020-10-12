@@ -7,7 +7,7 @@
 data "template_file" "_" {
   template = var.api_template
 
-  # vars = var.api_template_vars
+  vars = var.api_template_vars
 }
 
 resource "aws_api_gateway_rest_api" "_" {
