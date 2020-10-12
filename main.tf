@@ -60,6 +60,7 @@ resource "aws_apigatewayv2_domain_name" "this" {
     certificate_arn = var.domain_name_certificate_arn
     endpoint_type   = "REGIONAL"
     security_policy = "TLS_1_2"
+    hosted_zone_id  = var.zone_id
   }
 }
 
