@@ -74,3 +74,16 @@ variable "api_description" {
   type        = string
   default     = ""
 }
+
+variable "domain_name" {
+  description = "The domain name."
+  type        = string
+  default     = ""
+}
+
+variable "domain_name_certificate_arn" {
+  description = "The ARN of an AWS-managed certificate"
+  type        = string
+  default     = ""
+}
+

@@ -52,6 +52,16 @@ resource "aws_api_gateway_stage" "_" {
   # }
 }
 
+resource "aws_apigatewayv2_domain_name" "this" {
+  domain_name = var.domain_name
+
+  domain_name_configuration {
+    certificate_arn = var.domain_name_certificate_arn
+    endpoint_type   = "REGIONAL"
+    security_policy = "TLS_1_2"
+  }
+}
+
 # resource "aws_api_gateway_method_settings" "_" {
 #   rest_api_id = aws_api_gateway_rest_api._.id
 #   stage_name  = aws_api_gateway_stage._.stage_name
