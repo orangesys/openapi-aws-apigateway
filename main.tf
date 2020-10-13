@@ -81,8 +81,10 @@ resource "aws_api_gateway_usage_plan" "myusageplan" {
   name  = "${var.api_name}_usage_plan"
   dynamic "api_stages" {
     for_each = var.namespace
-    api_id   = aws_api_gateway_rest_api._.id
-    stage    = each.key
+    content {
+      api_id = aws_api_gateway_rest_api._.id
+      stage  = each.key
+    }
   }
 }
 
