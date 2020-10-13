@@ -93,3 +93,9 @@ variable "zone_id" {
   default     = ""
 }
 
+variable "create_usage_plan" {
+  description = "Controls if usage plan should be created"
+  type        = bool
+  default     = false
+}
+

@@ -76,6 +76,30 @@ resource "aws_route53_record" "this" {
   }
 }
 
+resource "aws_api_gateway_usage_plan" "myusageplan" {
+  count = var.create_usage_plan ? 1 : 0
+  name  = "${var.api_name}_usage_plan"
+  dynamic "api_stages" {
+    for_each = var.namespace
+    content {
+      api_id = aws_api_gateway_rest_api._.id
+      stage  = api_stages.key
+    }
+  }
+}
+
+resource "aws_api_gateway_api_key" "mykey" {
+  count = var.create_usage_plan ? 1 : 0
+  name  = "${var.api_name}_key"
+}
+
+resource "aws_api_gateway_usage_plan_key" "main" {
+  count         = var.create_usage_plan ? 1 : 0
+  key_id        = aws_api_gateway_api_key.mykey[0].id
+  key_type      = "API_KEY"
+  usage_plan_id = aws_api_gateway_usage_plan.myusageplan[0].id
+}
+
 # resource "aws_api_gateway_method_settings" "_" {
 #   rest_api_id = aws_api_gateway_rest_api._.id
 #   stage_name  = aws_api_gateway_stage._.stage_name
