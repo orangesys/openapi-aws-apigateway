@@ -83,7 +83,7 @@ resource "aws_api_gateway_usage_plan" "myusageplan" {
     for_each = var.namespace
     content {
       api_id = aws_api_gateway_rest_api._.id
-      stage  = each.key
+      stage  = api_stages.key
     }
   }
 }
