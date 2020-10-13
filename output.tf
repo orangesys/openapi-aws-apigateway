@@ -6,6 +6,10 @@ output "rest_api_id" {
   value = aws_api_gateway_rest_api._.id
 }
 
+output "api_key" {
+  value = aws_api_gateway_api_key.mykey.value
+}
+
 # output "api_url" {
 #   value = local.api_url
 # }
