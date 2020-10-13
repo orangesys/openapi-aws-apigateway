@@ -63,6 +63,13 @@ resource "aws_apigatewayv2_domain_name" "this" {
   }
 }
 
+resource "aws_apigatewayv2_api_mapping" "this" {
+  for_each    = var.domain_name != "" ? var.namespace : {}
+  api_id      = aws_api_gateway_rest_api._.id
+  domain_name = aws_apigatewayv2_domain_name.this[0].id
+  stage       = aws_api_gateway_stage._[each.key].id
+}
+
 resource "aws_route53_record" "this" {
   count   = var.domain_name != "" ? 1 : 0
   name    = aws_apigatewayv2_domain_name.this[0].domain_name
