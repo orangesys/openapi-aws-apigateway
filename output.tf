@@ -7,7 +7,7 @@ output "rest_api_id" {
 }
 
 output "api_key" {
-  value = aws_api_gateway_api_key.mykey.value
+  value = aws_api_gateway_api_key.mykey[0].value
 }
 
 # output "api_url" {
