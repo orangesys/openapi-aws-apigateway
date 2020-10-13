@@ -77,10 +77,9 @@ resource "aws_route53_record" "this" {
 }
 
 resource "aws_api_gateway_usage_plan" "myusageplan" {
-  count = var.create_usage_plan ? 1 : 0
-  name  = "${var.name}_usage_plan"
+  for_each = var.create_usage_plan ? var.namespace : {}
+  name  = "${var.api_name}_usage_plan"
   api_stages {
-    for_each = var.namespace
     api_id   = aws_api_gateway_rest_api._.id
     stage    = each.key
   }
@@ -88,7 +87,7 @@ resource "aws_api_gateway_usage_plan" "myusageplan" {
 
 resource "aws_api_gateway_api_key" "mykey" {
   count = var.create_usage_plan ? 1 : 0
-  name  = "${var.name}_key"
+  name  = "${var.api_name}_key"
 }
 
 resource "aws_api_gateway_usage_plan_key" "main" {
