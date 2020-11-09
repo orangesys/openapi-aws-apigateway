@@ -36,7 +36,15 @@ resource "aws_api_gateway_deployment" "_" {
   }
 }
 
+resource "aws_cloudwatch_log_group" "_" {
+  for_each          = var.namespace
+  name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api._.id}/${each.key}"
+  retention_in_days = 7
+  # ... potentially other configuration ...
+}
+
 resource "aws_api_gateway_stage" "_" {
+  depends_on = [aws_cloudwatch_log_group._]
   for_each   = var.namespace
   stage_name = each.key
   variables  = { url = each.value }
