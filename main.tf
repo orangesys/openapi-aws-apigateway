@@ -64,9 +64,9 @@ resource "aws_api_gateway_stage" "_" {
   deployment_id = aws_api_gateway_deployment._.id
 
   dynamic "access_log_settings" {
-    for_each = "arn:aws:logs:${aws_region.current.name}:${aws_caller_identity.current.account_id}:log-group:API-Gateway-Access-Logs_${aws_api_gateway_rest_api._.id}/${each.key}"
+    for_each = var.namespace
     content {
-      destination_arn = aws_api_gateway_rest_api._.id
+      destination_arn = "arn:aws:logs:${aws_region.current.name}:${aws_caller_identity.current.account_id}:log-group:API-Gateway-Access-Logs_${aws_api_gateway_rest_api._.id}/${access_log_settings.key}"
       format = jsonencode(
         {
           "caller"         = "$context.identity.caller"
