@@ -59,25 +59,22 @@ resource "aws_api_gateway_stage" "_" {
   rest_api_id   = aws_api_gateway_rest_api._.id
   deployment_id = aws_api_gateway_deployment._.id
 
-  dynamic "access_log_settings" {
-    for_each = var.namespace
-    content {
-      destination_arn = "arn:aws:logs:${var.region}:${var.account_id}:log-group:API-Gateway-Access-Logs_${aws_api_gateway_rest_api._.id}/${access_log_settings.key}"
-      format = jsonencode(
-        {
-          "caller"         = "$context.identity.caller"
-          "httpMethod"     = "$context.httpMethod"
-          "ip"             = "$context.identity.sourceIp"
-          "protocol"       = "$context.protocol"
-          "requestId"      = "$context.requestId"
-          "requestTime"    = "$context.requestTime"
-          "resourcePath"   = "$context.resourcePath"
-          "responseLength" = "$context.responseLength"
-          "status"         = "$context.status"
-          "user"           = "$context.identity.user"
-        }
-      )
-    }
+  access_log_settings {
+    destination_arn = "arn:aws:logs:${var.region}:${var.account_id}:log-group:API-Gateway-Access-Logs_${aws_api_gateway_rest_api._.id}/${each.key}"
+    format = jsonencode(
+      {
+        "caller"         = "$context.identity.caller"
+        "httpMethod"     = "$context.httpMethod"
+        "ip"             = "$context.identity.sourceIp"
+        "protocol"       = "$context.protocol"
+        "requestId"      = "$context.requestId"
+        "requestTime"    = "$context.requestTime"
+        "resourcePath"   = "$context.resourcePath"
+        "responseLength" = "$context.responseLength"
+        "status"         = "$context.status"
+        "user"           = "$context.identity.user"
+      }
+    )
   }
 
   # xray_tracing_enabled = var.xray_tracing_enabled
