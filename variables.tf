@@ -37,6 +37,14 @@ variable "api_template_vars" {
   default     = {}
 }
 
+variable "region" {
+  type = string
+}
+
+variable "account_id" {
+  type = string
+}
+
 # variable "api_throttling_rate_limit" {
 #   description = "API Gateway total requests across all API's within a REST endpoint"
 # }

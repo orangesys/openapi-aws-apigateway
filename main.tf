@@ -4,10 +4,6 @@
 #   api_name             = "${local.resource_name_prefix}-${var.api_name}"
 # }
 
-data "aws_region" "current" {}
-
-data "aws_caller_identity" "current" {}
-
 data "template_file" "_" {
   template = var.api_template
 
@@ -66,7 +62,7 @@ resource "aws_api_gateway_stage" "_" {
   dynamic "access_log_settings" {
     for_each = var.namespace
     content {
-      destination_arn = "arn:aws:logs:${aws_region.current.name}:${aws_caller_identity.current.account_id}:log-group:API-Gateway-Access-Logs_${aws_api_gateway_rest_api._.id}/${access_log_settings.key}"
+      destination_arn = "arn:aws:logs:${var.region}:${var.account_id}:log-group:API-Gateway-Access-Logs_${aws_api_gateway_rest_api._.id}/${access_log_settings.key}"
       format = jsonencode(
         {
           "caller"         = "$context.identity.caller"
