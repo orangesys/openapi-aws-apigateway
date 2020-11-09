@@ -4,6 +4,10 @@
 #   api_name             = "${local.resource_name_prefix}-${var.api_name}"
 # }
 
+data "aws_region" "current" {}
+
+data "aws_caller_identity" "current" {}
+
 data "template_file" "_" {
   template = var.api_template
 
@@ -36,21 +40,49 @@ resource "aws_api_gateway_deployment" "_" {
   }
 }
 
-resource "aws_cloudwatch_log_group" "_" {
+resource "aws_cloudwatch_log_group" "error_log" {
   for_each          = var.namespace
   name              = "API-Gateway-Execution-Logs_${aws_api_gateway_rest_api._.id}/${each.key}"
   retention_in_days = 7
   # ... potentially other configuration ...
 }
 
+resource "aws_cloudwatch_log_group" "access_log" {
+  for_each          = var.namespace
+  name              = "API-Gateway-Access-Logs_${aws_api_gateway_rest_api._.id}/${each.key}"
+  retention_in_days = 7
+  # ... potentially other configuration ...
+}
+
 resource "aws_api_gateway_stage" "_" {
-  depends_on = [aws_cloudwatch_log_group._]
+  depends_on = [aws_cloudwatch_log_group.error_log, aws_cloudwatch_log_group.access_log]
   for_each   = var.namespace
   stage_name = each.key
   variables  = { url = each.value }
 
   rest_api_id   = aws_api_gateway_rest_api._.id
   deployment_id = aws_api_gateway_deployment._.id
+
+  dynamic "access_log_settings" {
+    for_each = "arn:aws:logs:${aws_region.current.name}:${aws_caller_identity.current.account_id}:log-group:API-Gateway-Access-Logs_${aws_api_gateway_rest_api._.id}/${each.key}"
+    content {
+      destination_arn = aws_api_gateway_rest_api._.id
+      format = jsonencode(
+        {
+          "caller"         = "$context.identity.caller"
+          "httpMethod"     = "$context.httpMethod"
+          "ip"             = "$context.identity.sourceIp"
+          "protocol"       = "$context.protocol"
+          "requestId"      = "$context.requestId"
+          "requestTime"    = "$context.requestTime"
+          "resourcePath"   = "$context.resourcePath"
+          "responseLength" = "$context.responseLength"
+          "status"         = "$context.status"
+          "user"           = "$context.identity.user"
+        }
+      )
+    }
+  }
 
   # xray_tracing_enabled = var.xray_tracing_enabled
 
