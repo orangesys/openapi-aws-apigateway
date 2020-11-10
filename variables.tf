@@ -107,3 +107,10 @@ variable "create_usage_plan" {
   default     = false
 }
 
+variable "bind_stage_name" {
+  description = "bind stage name"
+  type        = string
+  default     = ""
+}
+
+
