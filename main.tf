@@ -118,6 +118,7 @@ resource "aws_route53_record" "this" {
 }
 
 resource "aws_api_gateway_usage_plan" "myusageplan" {
+  depends_on  = [aws_api_gateway_stage._]
   count = var.create_usage_plan ? 1 : 0
   name  = "${var.api_name}_usage_plan"
   dynamic "api_stages" {
