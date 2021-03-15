@@ -12,7 +12,9 @@ output "api_key" {
 
 output "stage_arn_list" {
   description = "The stage arn list"
-  value       = concat(aws_api_gateway_stage._.*.arn, [""])
+  value = toset([
+    for stage in aws_api_gateway_stage._ : stage.arn
+  ])
 }
 
 # output "api_url" {
