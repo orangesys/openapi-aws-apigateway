@@ -10,6 +10,11 @@ output "api_key" {
   value = element(concat(aws_api_gateway_api_key.mykey.*.value, list("")), 0)
 }
 
+output "stage_arn_list" {
+  description = "The stage arn list"
+  value       = aws_api_gateway_stage._.*.arn
+}
+
 # output "api_url" {
 #   value = local.api_url
 # }
