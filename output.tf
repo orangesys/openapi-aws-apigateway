@@ -7,7 +7,7 @@ output "rest_api_id" {
 }
 
 output "api_key" {
-  value = element(concat(aws_api_gateway_api_key.mykey.*.value, list("")), 0)
+  value = element(concat(aws_api_gateway_api_key.mykey.*.value, tolist("")), 0)
 }
 
 output "stage_arn_list" {
